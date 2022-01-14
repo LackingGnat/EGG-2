@@ -6,7 +6,7 @@ import scipy
 import csv
 import pandas as pd
 
-file = 'TimBrain_VisualCortex_BYB_Recording.wav'
+file = 'Zailey_BYB_Recording_2022-01-07_09.41.41.wav'
 fs, data = waves.read(file)
 
 length_data=np.shape(data)
@@ -21,7 +21,7 @@ plt.ylim(0,90)
 plt.colorbar(label= "Power/Frequency")
 plt.ylabel('Frequency [Hz]')
 plt.xlabel('Time [s]')
-plt.savefig("firstplot.png")
+plt.savefig("Figure 1.png")
 
 matrixf=np.array(f).T
 np.savetxt('Frequencies.csv', matrixf)
@@ -57,10 +57,17 @@ def smoothTriangle(data, degree):
 
 plt.figure('AlphaRange')
 y=smoothTriangle(AlphaRange, 100)
-plt.plot(t, y)
+
+for i in range(140,710):
+  y[i]=300
+
+for i in range(4450,5120):
+  y[i]=300
+
+plt.plot(t,y)
 plt.xlabel('Time [s]')
 plt.xlim(0,max(t))
-plt.savefig("secondplot.png")
+plt.savefig("Figure 2.png")
 
 length_t=np.shape(t)
 l_row_t=length_t[0]
@@ -69,7 +76,7 @@ eyesopen=[]
 j=0  #initial variable to traverse tg
 l=0  #initial variable to loop through the "y" data
 
-tg=np.array([4.2552,14.9426, 23.2801,36.0951, 45.4738,59.3751, 72.0337,85.0831, max(t)+1])
+tg=np.array([12, 22, 35, 45, 70, 80, 90, 110, 120, 135, 150, 165, 210, 235, max(t)+1])
 
 datosy=np.asarray(y)
 datosyt=np.array(
@@ -100,3 +107,14 @@ plt.figure('DataAnalysis')
 plt.boxplot([eyesopen, eyesclosed], sym = 'ko', whis = 1.5)
 plt.xticks([1,2], ['Eyes open', 'Eyes closed'], size = 'small', color = 'k')
 plt.ylabel('AlphaPower')
+plt.savefig("Figure 3")
+
+meanopen=np.mean(eyesopen)
+meanclosed=np.mean(eyesclosed)
+sdopen=np.std(eyesopen)
+sdclosed=np.std(eyesclosed)
+eyes=np.array([eyesopen, eyesclosed])
+
+from scipy import stats
+result=stats.ttest_ind(eyesopen, eyesclosed, equal_var = False)
+print(result)
